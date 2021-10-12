@@ -10,7 +10,7 @@ __Feature Requests are welcome!__
 
 This plugin requires Craft CMS 3.0.0-beta.23 or later.
 
-### Installation
+## Installation
 To install this plugin, follow these steps:
 1. Install with Composer via `composer require internetztube/craft-structure-disable-reorder`
 2. Install plugin in the Craft Control Panel under Settings > Plugins
