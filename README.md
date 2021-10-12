@@ -1,6 +1,8 @@
 # Structure Disable Recorder for Craft CMS 3.x
 
-This plugin prohibits moving entries in a structure. So you can only change the parent by using the entry edit page.
+This plugin prohibits moving entries in a structure. So you can only change the parent by using the entry edit page. That's it!
+
+__Feature Requests are welcome!__
 
 ![Share](screenshots/share.png)
 

@@ -1,4 +1,4 @@
-# craft-structure-disable-reorder Changelog
+# Structure Disable Reorder Changelog
 
 All notable changes to this project will be documented in this file.
 
