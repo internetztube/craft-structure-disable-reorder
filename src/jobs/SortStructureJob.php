@@ -33,7 +33,7 @@ class SortStructureJob extends BaseJob
         $count = $siblings->count();
         $siblings->sortBy('title')->values()->each(function(Entry $entry, int $index) use ($parent, $structureId, $structuresService, $level, $count, $queue, &$prevElement) {
             $queue->setProgress($index * 100 / $count);
-            // Don't move entry, when it's no longer has the same level or parent.
+            // Don't move entry, when it no longer has the same level or parent.
             if ($entry->level !== $level || $entry->getParent()->canonicalUid !== $parent->canonicalUid) { return; }
             if ($index === 0 && !$parent) {
                 $structuresService->prependToRoot($structureId, $entry, Structures::MODE_UPDATE);
