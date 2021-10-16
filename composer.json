@@ -2,7 +2,7 @@
     "name": "internetztube/craft-structure-disable-reorder",
     "description": "Disables Structure reorder on Entry Overview Page.",
     "type": "craft-plugin",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "keywords": [
         "craft",
         "cms",

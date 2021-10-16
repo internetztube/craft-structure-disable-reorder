@@ -1,6 +1,6 @@
 # Structure Disable Reorder for Craft CMS 3.x
 
-This plugin prohibits moving entries in a structure. So you can only change the parent by using the entry edit page. That's it!
+This plugin prohibits moving entries in a structure and sorts them alphabetically. So you can only change the parent by using the entry edit page. That's it!
 
 __Feature Requests are welcome!__
 
