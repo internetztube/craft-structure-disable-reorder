@@ -19,7 +19,7 @@ You can also install this plugin via the Plugin Store in the Craft Control Panel
 
 ## Screenshots
 ![Overview](screenshots/overview.png)
-Note: The icons with which you can normally move the entry are missing here.
+Note: The icons with which you can normally move the entry are missing here, and the alphabetical order. 
 
 
 # Issues
