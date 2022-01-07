@@ -3,15 +3,11 @@
 namespace internetztube\structureDisableReorder;
 
 use Craft;
-use craft\base\Element;
 use craft\base\Plugin;
 use craft\elements\Entry;
-use craft\events\ElementEvent;
 use craft\events\ElementStructureEvent;
+use craft\events\ModelEvent;
 use craft\events\TemplateEvent;
-use craft\services\Elements;
-use craft\services\Plugins;
-use craft\events\PluginEvent;
 use craft\web\View;
 use internetztube\structureDisableReorder\assetBundles\MainAssetBundle;
 use internetztube\structureDisableReorder\jobs\SortStructureJob;
@@ -38,20 +34,36 @@ class StructureDisableReorder extends Plugin
             return $elementStructureEvent;
         });
 
-        Event::on(Entry::class, Entry::EVENT_AFTER_MOVE_IN_STRUCTURE, function (ElementStructureEvent $elementStructureEvent) {
+
+        $getEntryIdentifier = function (Entry $entry): string {
+            $result = ['id' => $entry->id, 'title' => $entry->title, 'parentId' => $entry->getParent()->id ?? null];
+            return json_encode($result);
+        };
+
+        $entryIdentifierList = [];
+        Event::on(Entry::class, Entry::EVENT_AFTER_SAVE, function (ModelEvent $event) use (&$entryIdentifierList, $getEntryIdentifier) {
             global $internetztubeStructureDisableReorderSortStructureJobIsRunning;
             if (!$internetztubeStructureDisableReorderSortStructureJobIsRunning) {
                 /** @var Entry $entry */
-                $entry = $elementStructureEvent->sender;
-                if ($entry->getIsDraft()) { return $elementStructureEvent; }
-                $queue = Craft::$app->getQueue();
-                $queue->push(new SortStructureJob([
+                $entry = $event->sender;
+                if ($entry->getIsDraft()) { return; }
+                $entryIdentifier = $getEntryIdentifier($entry);
+                // Don't push task into queue, when `id`, `parent` and `title` have not changed.
+                if (in_array($entryIdentifier, $entryIdentifierList)) { return; }
+                $job = new SortStructureJob([
                     'description' => sprintf('Updating the structure sorting of %s', $entry->section->handle),
                     'canonicalId' => $entry->canonicalId,
                     'siteId' => $entry->site->id,
-                ]), 10);
+                ]);
+                Craft::$app->getQueue()->push($job);
             }
-            return $elementStructureEvent;
+        });
+
+        Event::on(Entry::class, Entry::EVENT_BEFORE_SAVE, function (ModelEvent $event) use (&$entryIdentifierList, $getEntryIdentifier) {
+            /** @var Entry $entry */
+            $entry = $event->sender;
+            $notSavedEntry = Craft::$app->getEntries()->getEntryById($entry->id, $entry->siteId);
+            $entryIdentifierList[] = $getEntryIdentifier($notSavedEntry);
         });
 
         Event::on(View::class, View::EVENT_BEFORE_RENDER_PAGE_TEMPLATE, function (TemplateEvent $event) {
